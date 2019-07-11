@@ -13,3 +13,10 @@ The basis for the lexical analysis is a automata with 5 states, each state deali
   4 - string constant.
 
 The syntax analysis was made using a slr1 parser that generates a map<int,map<string,vector<string>>>, where the int represents the automata state, the string represents the variables(terminal and non-terminal) and the vector contains information about each transition.
+
+The semantic analysis required for this course had 5 types of semantical errors: 
+  Conflict in the declaration of variables with an already declared function
+  Use of non-declared variables
+  Use of non-declared functions
+  Redeclaration of variables
+  Redeclaration of functions
