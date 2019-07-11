@@ -16,7 +16,6 @@ int estado=0;
 int tam=0;
 bool ok=true,varNotDeclared=false,functNotDeclared=false,redecVar=false,redecFunct=false,varFunctConflict=false;
 set<string> functContext,context;
-string nomedafuncao;
 void erroLexico(int linha, int coluna){
 	ok = false;
 	printf("%d %d\n",linha, coluna);
@@ -46,7 +45,6 @@ vector<node> nodes;
 int raiz;
 
 void getVar(int root){
-	//printf("ainda n deu merda \n");
 	for(int x : nodes[root].adj){
 		if(nodes[x].tk.tipo=="PAR"){
 			if(context.count(nodes[nodes[x].adj[1]].tk.text)){
@@ -89,10 +87,7 @@ void dfs_fun(int root){
 				if(stopper)stopper=0;
 				else{
 					if(!context.count(nodes[x].tk.text)){
-						varNotDeclared = true;
-						//cout<<endl<<"Funcao que estamos: "<<nomedafuncao<<endl;	
-						//cout<<endl<<nodes[x].tk.text<<endl;
-						//for(auto s : context) cout<<endl<<s<<endl;			
+						varNotDeclared = true;			
 					}	
 				}		
 			}
@@ -102,11 +97,9 @@ void dfs_fun(int root){
 }
 
 void dfs(int root){
-	//printf("Contador: %d\n",contador++);
 	for(int x : nodes[root].adj){
 		if(nodes[x].tk.tipo=="FUNCT_SC"){
 			context.clear();
-			//printf("Funcao sem parametro\n");
 			int nome = nodes[x].adj[1];
 			if(functContext.count(nodes[nome].tk.text)){
 				redecFunct = true;	
@@ -115,14 +108,11 @@ void dfs(int root){
 				functContext.insert(nodes[nome].tk.text);
 			}
 			stopper=1;
-			nomedafuncao = nodes[nome].tk.text;
 			dfs_fun(x);
 		}
 		else if (nodes[x].tk.tipo=="FUNCT_CC"){
 			context.clear();
-			//printf("Funcao com parametro\n");
 			int nome = nodes[x].adj[1];
-			//printf("%s \n",nodes[nome].tk.text.c_str());
 			if(functContext.count(nodes[nome].tk.text)){
 				redecFunct = true;	
 			}
@@ -130,13 +120,10 @@ void dfs(int root){
 				functContext.insert(nodes[nome].tk.text);
 			}
 			stopper=1;
-			nomedafuncao = nodes[nome].tk.text;
 			getVar(nodes[x].adj[3]);
 			dfs_fun(x);
 		}
 		else if(nodes[x].tk.tipo=="MAIN"){
-			//printf("Main\n");
-			nomedafuncao = "main";
 			context.clear();
 			stopper=0;
 			dfs_fun(x);
